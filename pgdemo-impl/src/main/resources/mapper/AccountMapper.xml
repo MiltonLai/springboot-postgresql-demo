@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rockbb.pgdemo.commons.impl.mapper.AccountMapper">
+    <resultMap type="com.rockbb.pgdemo.commons.api.dto.AccountDTO" id="account_1">
+        <id column="id"                             property="id" />
+        <result column="name"                       property="name" />
+        <result column="val"                        property="val" />
+        <result column="amount"                     property="amount" />
+        <result column="flag"                       property="flag" />
+        <result column="status"                     property="status" />
+        <result column="created_at"                 property="createdAt" />
+        <result column="updated_at"                 property="updatedAt" />
+        <result column="version"                    property="version" />
+    </resultMap>
+    <sql id="key">id</sql>
+    <sql id="columns">
+        name, val, amount, flag, status, created_at, updated_at, version
+    </sql>
+    <sql id="table">test_account</sql>
+
+    <insert id="insert" parameterType="com.rockbb.pgdemo.commons.api.dto.AccountDTO"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO <include refid="table" />
+        (<include refid="columns" />)
+        VALUES (
+        #{name},
+        #{val},
+        #{amount},
+        #{flag},
+        #{status},
+        #{createdAt},
+        #{updatedAt},
+        #{version})
+    </insert>
+
+    <update id="update" parameterType="com.rockbb.pgdemo.commons.api.dto.AccountDTO">
+        UPDATE <include refid="table" /> SET
+            name        = #{name},
+            val         = #{val},
+            amount      = #{amount},
+            flag        = #{flag},
+            status      = #{status},
+            created_at  = #{createdAt},
+            updated_at  = #{updatedAt},
+            version     = #{version}
+        WHERE id = #{id}
+    </update>
+
+    <select id="select" parameterType="long" resultMap="account_1">
+        SELECT <include refid="key" />, <include refid="columns" />
+        FROM <include refid="table" />
+        WHERE id = #{id}
+    </select>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM <include refid="table" />
+        WHERE id = #{id}
+    </delete>
+
+    <sql id="params">
+    </sql>
+
+    <select id="list" resultMap="account_1">
+        SELECT
+        <include refid="key" />, <include refid="columns" />
+        FROM
+        <include refid="table" />
+        <where>
+            <include refid="params" />
+        </where>
+    </select>
+
+    <select id="count" resultType="long">
+        SELECT
+        COUNT(<include refid="key" />)
+        FROM
+        <include refid="table" />
+        <where>
+            <include refid="params" />
+        </where>
+    </select>
+
+</mapper>
